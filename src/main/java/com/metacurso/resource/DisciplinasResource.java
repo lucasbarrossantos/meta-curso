@@ -51,5 +51,12 @@ public class DisciplinasResource {
     public void remover(@PathVariable("codigo") Integer codigo) {
         disciplinaRepository.deleteById(codigo);
     }
+
+    @GetMapping("/{codigo}")
+    public ResponseEntity<Disciplinas> findByCodigo(@PathVariable("codigo") Integer codigo) {
+        return disciplinaRepository.findById(codigo).isPresent() ?
+                ResponseEntity.ok().body(disciplinaRepository.findById(codigo).get()) :
+                ResponseEntity.notFound().build();
+    }
     
 }
