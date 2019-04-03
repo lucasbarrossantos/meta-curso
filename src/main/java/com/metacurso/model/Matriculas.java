@@ -9,10 +9,6 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by luciano on 18/6/18.
- */
-
 @Entity
 @Table(name = "matriculas")
 public class Matriculas {

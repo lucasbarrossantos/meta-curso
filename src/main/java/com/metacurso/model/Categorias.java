@@ -5,9 +5,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-/**
- * Created by luciano on 11/6/18.
- */
 
 @Entity
 @Table(name = "categorias")

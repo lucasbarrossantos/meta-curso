@@ -2,10 +2,6 @@ package com.metacurso.model;
 
 import javax.persistence.*;
 
-/**
- * Created by luciano on 11/6/18.
- */
-
 @Entity
 @Table(name = "cursos_turmas")
 public class CursosTurmas {

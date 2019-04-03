@@ -1,7 +1,6 @@
 package com.metacurso.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.NumberFormat;
 
 import javax.persistence.*;
@@ -10,9 +9,6 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 
-/**
- * Created by luciano on 11/6/18.
- */
 @Entity
 @Table(name = "cursos")
 public class Cursos {
@@ -20,7 +16,7 @@ public class Cursos {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer codigo;
-    @NotBlank(message = "Nome é obrigatório")
+    @NotNull
     private String nome;
     private String descricao;
     @ManyToOne

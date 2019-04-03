@@ -5,9 +5,6 @@ import org.springframework.format.annotation.NumberFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-/**
- * Created by luciano on 11/6/18.
- */
 
 @Entity
 @Table(name = "disciplinas")

@@ -7,10 +7,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-/**
- * Created by luciano on 11/6/18.
- */
-
 @Entity
 @Table(name = "turmas")
 public class Turmas {
@@ -18,7 +14,7 @@ public class Turmas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer codigo;
-    @NotBlank(message = "Nome é obrigatório")
+    @NotNull
     private String nome;
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "dd/MM/yyyy")

@@ -4,12 +4,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
-
-/**
- * Created by luciano on 2/7/18.
- */
 
 @Entity
 @Table(name = "interessados")

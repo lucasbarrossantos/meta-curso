@@ -6,9 +6,6 @@ import org.springframework.format.annotation.NumberFormat;
 import javax.persistence.*;
 import java.util.Date;
 
-/**
- * Created by luciano on 22/6/18.
- */
 
 @Entity
 @Table(name = "horarios")

@@ -7,11 +7,6 @@ import org.springframework.format.annotation.NumberFormat;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-/**
- * Created by luciano on 12/6/18.
- */
 
 @Entity
 @Table(name = "materiais")
@@ -25,7 +20,7 @@ public class Materiais {
     private String nome;
     private Boolean disponivel;
     @Column(name = "estoque_atual")
-    @NotNull(message = "Estoque atual é obrigatório")
+    @NotNull
     @Min(value = 1, message = "Informe a quantidade atual em estoque")
     private Integer estoqueatual;
     @NumberFormat(style = NumberFormat.Style.NUMBER, pattern = "#,##0.00")

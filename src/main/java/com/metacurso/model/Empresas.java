@@ -1,10 +1,9 @@
 package com.metacurso.model;
 
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.br.CNPJ;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -15,7 +14,7 @@ public class Empresas {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer codigo;
 
-    @NotBlank(message = "Nome é obrigatório")
+    @NotNull
     private String nome;
 
     @CNPJ(message = "CNPJ inválido")
@@ -33,7 +32,7 @@ public class Empresas {
 
     private String numero;
 
-    @Email(message = "E-mail inválido")
+    @Email
     private String email;
 
     private String telefone;
@@ -45,7 +44,7 @@ public class Empresas {
     @Column(name = "inscricao_estadual")
     private String inscricaoEstadual;
 
-    @NotNull(message = "Centro de custo é obrigatório")
+    @NotNull
     @ManyToOne
     private Categorias categoria;
 

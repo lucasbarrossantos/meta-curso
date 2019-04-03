@@ -9,9 +9,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-/**
- * Created by luciano on 18/6/18.
- */
 
 @Entity
 @Table(name = "titulos")
@@ -26,12 +23,12 @@ public class Titulos {
     @ManyToOne
     @JoinColumn(name = "matricula", referencedColumnName = "codigo")
     private Matriculas matricula;
-    @NotBlank(message = "Titular é obrigatório")
+    @NotNull
     private String titular;
     private String cpf_cnpj;
     private String telefone;
     private String email;
-    @NotNull(message = "Data de Vencimento é obrigatório")
+    @NotNull
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date vencimento;

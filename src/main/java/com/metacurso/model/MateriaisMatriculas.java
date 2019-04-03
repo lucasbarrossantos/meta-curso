@@ -5,10 +5,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.util.Date;
 
-/**
- * Created by luciano on 25/6/18.
- */
-
 @Entity
 @Table(name = "materiais_matriculas")
 public class MateriaisMatriculas {

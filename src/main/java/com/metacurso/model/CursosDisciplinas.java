@@ -4,10 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 
-/**
- * Created by luciano on 11/6/18.
- */
-
 @Entity
 @Table(name = "cursos_disciplinas")
 public class CursosDisciplinas {

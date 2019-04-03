@@ -1,17 +1,13 @@
 package com.metacurso.model;
 
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
-
-/**
- * Created by luciano on 13/6/18.
- */
 
 @Entity
 @Table(name = "pessoas")
@@ -23,7 +19,7 @@ public class Pessoas {
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date data_cadastro;
-    @NotBlank(message = "Nome é obrigatório")
+    @NotNull
     private String nome;
     @CPF(message = "Informe um CPF válido")
     private String cpf;
@@ -34,7 +30,7 @@ public class Pessoas {
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     @Column(name = "data_nascimento")
     private Date datanascimento;
-    @Email(message = "Informe um e-mail válido")
+    @Email
     private String email;
     private String telefone;
     private String celular;
