@@ -17,7 +17,7 @@ public class Empresas {
     @NotNull
     private String nome;
 
-    @CNPJ(message = "CNPJ inválido")
+    @CNPJ
     private String cnpj;
 
     private String endereco;

@@ -57,8 +57,7 @@ public class TurmaService {
                 .orElseThrow(CursoInexistenteException::new);
     }
 
-    @Transactional
-    public void cursoTurma(Turmas turmas) {
+    private void cursoTurma(Turmas turmas) {
         CursosTurmas cursosTurmas = new CursosTurmas();
         cursosTurmas.setTurma(turmas);
         cursosTurmas.setCurso(turmas.getCurso());
