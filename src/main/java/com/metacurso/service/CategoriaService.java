@@ -16,13 +16,13 @@ public class CategoriaService {
     private CategoriaRepository categoriaRepository;
 
     public Categorias update(Integer codigo, Categorias categorias) {
-        Optional<Categorias> categoriaSalva = getCategoriaPorCodigo(codigo);
+        Optional<Categorias> categoriaSalva = findByCodigo(codigo);
 
         BeanUtils.copyProperties(categorias, categoriaSalva.get(), "codigo");
         return categoriaRepository.save(categoriaSalva.get());
     }
 
-    private Optional<Categorias> getCategoriaPorCodigo(Integer codigo) {
+    private Optional<Categorias> findByCodigo(Integer codigo) {
         Optional<Categorias> categoriaSalva = categoriaRepository.findById(codigo);
 
         if (!categoriaSalva.isPresent()) {

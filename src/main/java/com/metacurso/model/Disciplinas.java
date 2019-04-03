@@ -1,10 +1,9 @@
 package com.metacurso.model;
 
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.NumberFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by luciano on 11/6/18.
@@ -17,7 +16,7 @@ public class Disciplinas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer codigo;
-    @NotBlank(message = "Nome é obrigatório")
+    @NotNull
     private String nome;
     private Integer status;
     private Integer lingua_estrangeira;
