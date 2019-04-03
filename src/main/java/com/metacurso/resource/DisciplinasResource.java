@@ -48,7 +48,7 @@ public class DisciplinasResource {
 
     @DeleteMapping("/{codigo}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void remover(@PathVariable("codigo") Integer codigo) {
+    public void delete(@PathVariable("codigo") Integer codigo) {
         disciplinaRepository.deleteById(codigo);
     }
 
