@@ -3,7 +3,7 @@ package com.metacurso.service;
 import com.metacurso.model.Cursos;
 import com.metacurso.repository.CategoriaRepository;
 import com.metacurso.repository.CursoRepository;
-import com.metacurso.service.exception.CategoriaInexistenteOuInativaException;
+import com.metacurso.service.exception.CategoriaInexistenteException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -44,7 +44,7 @@ public class CursoService {
 
     private void validarCategoria(Cursos cursos) {
         categoriaRepository.findById(cursos.getCategoria().getCodigo())
-                .orElseThrow(CategoriaInexistenteOuInativaException::new);
+                .orElseThrow(CategoriaInexistenteException::new);
     }
     
 }

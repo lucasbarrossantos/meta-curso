@@ -2,10 +2,10 @@ package com.metacurso.resource;
 
 import com.metacurso.event.RecursoCriadoEvent;
 import com.metacurso.exceptionhandler.MetaCursoExceptionHandler;
-import com.metacurso.model.Cursos;
-import com.metacurso.repository.CursoRepository;
-import com.metacurso.service.CursoService;
-import com.metacurso.service.exception.CategoriaInexistenteException;
+import com.metacurso.model.Turmas;
+import com.metacurso.repository.TurmaRepository;
+import com.metacurso.service.TurmaService;
+import com.metacurso.service.exception.CursoInexistenteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
@@ -20,14 +20,14 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cursos")
-public class CursosResource {
+@RequestMapping("/turmas")
+public class TurmasResource {
 
     @Autowired
-    private CursoRepository cursoRepository;
+    private TurmaRepository turmaRepository;
 
     @Autowired
-    private CursoService cursoService;
+    private TurmaService turmaService;
 
     @Autowired
     private ApplicationEventPublisher publisher;
@@ -36,47 +36,48 @@ public class CursosResource {
     private MessageSource messageSource;
 
     @GetMapping
-    public List<Cursos> getAll() {
-        return cursoRepository.findAll();
+    public List<Turmas> getAll() {
+        return turmaRepository.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<Cursos> save(@Valid @RequestBody Cursos cursos,
-                                          HttpServletResponse response) {
-        Cursos cursoSalvo = cursoService.save(cursos);
-        publisher.publishEvent(new RecursoCriadoEvent(this, response, cursoSalvo.getCodigo()));
-        return ResponseEntity.status(HttpStatus.CREATED).body(cursoSalvo);
+    public ResponseEntity<Turmas> save(@Valid @RequestBody Turmas turmas,
+                                             HttpServletResponse response) {
+        Turmas turmaSalva = turmaService.save(turmas);
+        publisher.publishEvent(new RecursoCriadoEvent(this, response, turmaSalva.getCodigo()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(turmaSalva);
     }
 
     @PutMapping("/{codigo}")
-    public ResponseEntity<Cursos> update(@PathVariable("codigo") Integer codigo,
-                                             @Valid @RequestBody Cursos cursos) {
-        return ResponseEntity.ok(cursoService.update(codigo, cursos));
+    public ResponseEntity<Turmas> update(@PathVariable("codigo") Integer codigo,
+                                                @Valid @RequestBody Turmas turmas) {
+        return ResponseEntity.ok(turmaService.update(codigo, turmas));
     }
 
     @DeleteMapping("/{codigo}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("codigo") Integer codigo) {
-        cursoRepository.deleteById(codigo);
+        turmaRepository.deleteById(codigo);
     }
 
     @GetMapping("/{codigo}")
-    public ResponseEntity<Cursos> findByCodigo(@PathVariable("codigo") Integer codigo) {
-        return cursoRepository.findById(codigo).isPresent() ?
-                ResponseEntity.ok().body(cursoRepository.findById(codigo).get()) :
+    public ResponseEntity<Turmas> findByCodigo(@PathVariable("codigo") Integer codigo) {
+        return turmaRepository.findById(codigo).isPresent() ?
+                ResponseEntity.ok().body(turmaRepository.findById(codigo).get()) :
                 ResponseEntity.notFound().build();
     }
 
     // ExceptionHandlers
 
-    @ExceptionHandler({ CategoriaInexistenteException.class })
+    @ExceptionHandler({CursoInexistenteException.class })
     public ResponseEntity<Object> handleCategoriaInexistenteOuInativaException(
-            CategoriaInexistenteException ex) {
+            CursoInexistenteException ex) {
 
-        String mensagemUsuario = messageSource.getMessage("categoria.inexistente",
+        String mensagemUsuario = messageSource.getMessage("curso.inexistente",
                 null, LocaleContextHolder.getLocale());
         String mensagemDesenvolvedor = ex.toString();
         List<MetaCursoExceptionHandler.Erro> erros = Arrays.asList(new MetaCursoExceptionHandler.Erro(mensagemUsuario, mensagemDesenvolvedor));
         return ResponseEntity.badRequest().body(erros);
     }
+
 }
