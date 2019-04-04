@@ -70,7 +70,7 @@ public class TurmasResource {
     // ExceptionHandlers
 
     @ExceptionHandler({CursoInexistenteException.class })
-    public ResponseEntity<Object> handleCategoriaInexistenteOuInativaException(
+    public ResponseEntity<Object> handleCategoriaInexistente(
             CursoInexistenteException ex) {
 
         String mensagemUsuario = messageSource.getMessage("curso.inexistente",
