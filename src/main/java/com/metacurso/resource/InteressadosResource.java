@@ -6,6 +6,7 @@ import com.metacurso.model.Interessados;
 import com.metacurso.repository.InteressadoRepository;
 import com.metacurso.service.InteressadoService;
 import com.metacurso.service.exception.CursoInexistenteException;
+import com.metacurso.service.exception.EventoInexistenteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
@@ -70,13 +71,26 @@ public class InteressadosResource {
     // ExceptionHandlers
 
     @ExceptionHandler({CursoInexistenteException.class })
-    public ResponseEntity<Object> handleCategoriaInexistenteOuInativaException(
+    public ResponseEntity<Object> handleCursoInexistenteOuInativaException(
             CursoInexistenteException ex) {
 
         String mensagemUsuario = messageSource.getMessage("curso.inexistente",
                 null, LocaleContextHolder.getLocale());
         String mensagemDesenvolvedor = ex.toString();
-        List<MetaCursoExceptionHandler.Erro> erros = Arrays.asList(new MetaCursoExceptionHandler.Erro(mensagemUsuario, mensagemDesenvolvedor));
+        List<MetaCursoExceptionHandler.Erro> erros =
+                Arrays.asList(new MetaCursoExceptionHandler.Erro(mensagemUsuario, mensagemDesenvolvedor));
+        return ResponseEntity.badRequest().body(erros);
+    }
+
+    @ExceptionHandler({ EventoInexistenteException.class })
+    public ResponseEntity<Object> handleEventoInexistenteOuInativaException(
+            EventoInexistenteException ex) {
+
+        String mensagemUsuario = messageSource.getMessage("evento.inexistente",
+                null, LocaleContextHolder.getLocale());
+        String mensagemDesenvolvedor = ex.toString();
+        List<MetaCursoExceptionHandler.Erro> erros =
+                Arrays.asList(new MetaCursoExceptionHandler.Erro(mensagemUsuario, mensagemDesenvolvedor));
         return ResponseEntity.badRequest().body(erros);
     }
 }

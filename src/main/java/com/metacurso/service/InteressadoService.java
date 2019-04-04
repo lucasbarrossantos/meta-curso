@@ -3,10 +3,10 @@ package com.metacurso.service;
 import com.metacurso.model.Cursos;
 import com.metacurso.model.CursosInteressados;
 import com.metacurso.model.Interessados;
-import com.metacurso.repository.CursoRepository;
-import com.metacurso.repository.CursosInteressadosRepository;
-import com.metacurso.repository.InteressadoRepository;
+import com.metacurso.model.InteressadosEventos;
+import com.metacurso.repository.*;
 import com.metacurso.service.exception.CursoInexistenteException;
+import com.metacurso.service.exception.EventoInexistenteException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -27,13 +27,20 @@ public class InteressadoService {
     @Autowired
     private CursosInteressadosRepository cursosInteressadosRepository;
 
+    @Autowired
+    private InteressadosEventosRepository interessadosEventosRepository;
+
+    @Autowired
+    private EventoRepository eventoRepository;
+
     public Interessados save(Interessados interessados) {
         validarCurso(interessados);
-        //TODO: validar Interessado também
+        validarEvento(interessados);
 
         interessados.setDatacadastro(new Date());
         interessados = interessadoRepository.save(interessados);
         cursosInteressados(interessados);
+        interessadosEventos(interessados);
         return interessados;
     }
 
@@ -59,12 +66,23 @@ public class InteressadoService {
                 .orElseThrow(CursoInexistenteException::new);
     }
 
+    private void validarEvento(Interessados interessados) {
+        eventoRepository.findById(interessados.getEvento().getCodigo())
+                .orElseThrow(EventoInexistenteException::new);
+    }
+
     private void cursosInteressados(Interessados interessados) {
         CursosInteressados cursosInteressados = new CursosInteressados();
         cursosInteressados.setInteressado(interessados);
         cursosInteressados.setCurso(interessados.getCurso());
         cursosInteressadosRepository.save(cursosInteressados);
-        // TODO: Chamar também o InteressadosEventos
+    }
+
+    private void interessadosEventos(Interessados interessados) {
+        InteressadosEventos interessadosEventos = new InteressadosEventos();
+        interessadosEventos.setInteressados(interessados);
+        interessadosEventos.setEventos(interessados.getEvento());
+        interessadosEventosRepository.save(interessadosEventos);
     }
 
 }
