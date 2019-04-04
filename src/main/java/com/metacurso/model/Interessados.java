@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -17,7 +18,7 @@ public class Interessados {
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date datacadastro;
-    @NotBlank(message = "Nome é obrigatório")
+    @NotNull
     private String nome;
     private String telefone;
     private String email;
