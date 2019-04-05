@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/categorias")
@@ -30,8 +29,8 @@ public class CategoriaResource {
     private ApplicationEventPublisher publisher;
 
     @GetMapping
-    public List<Categorias> getAll() {
-        return categoriaRepository.findAll();
+    public Page<Categorias> getAll(Pageable pageable) {
+        return categoriaRepository.findAll(pageable);
     }
 
     @PostMapping
