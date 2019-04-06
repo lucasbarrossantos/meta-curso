@@ -1,14 +1,16 @@
 package com.metacurso.service;
 
 import com.metacurso.model.Cursos;
-import com.metacurso.repository.CategoriaRepository;
-import com.metacurso.repository.CursoRepository;
-import com.metacurso.service.exception.CategoriaInexistenteException;
+import com.metacurso.model.CursosDisciplinas;
+import com.metacurso.model.CursosMateriais;
+import com.metacurso.repository.*;
+import com.metacurso.service.exception.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,6 +21,18 @@ public class CursoService {
 
     @Autowired
     private CategoriaRepository categoriaRepository;
+
+    @Autowired
+    private DisciplinaRepository disciplinaRepository;
+
+    @Autowired
+    private CursosDisciplinaRepository cursosDisciplinaRepository;
+
+    @Autowired
+    private CursoMaterialRepository cursoMaterialRepository;
+
+    @Autowired
+    private MaterialRepository materialRepository;
 
     public Cursos save(Cursos cursos) {
         validarCategoria(cursos);
@@ -32,6 +46,48 @@ public class CursoService {
         return cursoRepository.save(cursoSalva.get());
     }
 
+    public void adicionarDisciplina(Integer cursoId, Integer disciplinaId) {
+        validarDisciplina(disciplinaId);
+        verificarDuplicidadeDeDisciplina(cursoId, disciplinaId);
+        CursosDisciplinas cursosDisciplinas = new CursosDisciplinas();
+        cursosDisciplinas.setCurso(cursoRepository.findById(cursoId).get());
+        cursosDisciplinas.setDisciplina(disciplinaRepository.findById(disciplinaId).get());
+        cursosDisciplinaRepository.save(cursosDisciplinas);
+    }
+
+    public void adicionarMaterial(Integer cursoId, Integer materialId) {
+        validarMaterial(materialId);
+        verificarDuplicidadeDeMaterial(cursoId, materialId);
+        CursosMateriais cursosMateriais = new CursosMateriais();
+        cursosMateriais.setCurso(cursoRepository.findById(cursoId).get());
+        cursosMateriais.setMaterial(materialRepository.findById(materialId).get());
+        cursoMaterialRepository.save(cursosMateriais);
+    }
+
+    public void deleteDisciplina(Integer cursoId, Integer disciplinaId) {
+        validarDisciplina(disciplinaId);
+        cursosDisciplinaRepository.delete(cursosDisciplinaRepository
+                .findByCursoCodigoAndDisciplinaCodigo(cursoId, disciplinaId));
+    }
+
+    private void verificarDuplicidadeDeDisciplina(Integer cursoId, Integer disciplinaId) {
+        List<CursosDisciplinas> disciplinas = cursosDisciplinaRepository
+                .findAllByCursoCodigoAndDisciplinaCodigo(cursoId, disciplinaId);
+
+        if (!disciplinas.isEmpty()) {
+            throw new DisciplinaJaAdicionadaException();
+        }
+    }
+
+    private void verificarDuplicidadeDeMaterial(Integer cursoId, Integer materialId) {
+        List<CursosMateriais> materiais = cursoMaterialRepository
+                .findByCursoCodigoAndMaterialCodigo(cursoId, materialId);
+
+        if (!materiais.isEmpty()) {
+            throw new MaterialJaAdicionadaException();
+        }
+    }
+
     private Optional<Cursos> findByCodigo(Integer codigo) {
         Optional<Cursos> cursoSalva = cursoRepository.findById(codigo);
 
@@ -43,8 +99,24 @@ public class CursoService {
     }
 
     private void validarCategoria(Cursos cursos) {
-        categoriaRepository.findById(cursos.getCategoria().getCodigo())
-                .orElseThrow(CategoriaInexistenteException::new);
+        if (cursos.getCategoria() != null) {
+            categoriaRepository.findById(cursos.getCategoria().getCodigo())
+                    .orElseThrow(CategoriaInexistenteException::new);
+        }
     }
-    
+
+    private void validarDisciplina(Integer disciplinaId) {
+        if (disciplinaId != null) {
+            disciplinaRepository.findById(disciplinaId)
+                    .orElseThrow(DisciplinaInexistenteException::new);
+        }
+    }
+
+    private void validarMaterial(Integer materialId) {
+        if (materialId != null) {
+            materialRepository.findById(materialId)
+                    .orElseThrow(MaterialInexistenteException::new);
+        }
+    }
+
 }
