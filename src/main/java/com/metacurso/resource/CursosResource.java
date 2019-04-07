@@ -9,12 +9,15 @@ import com.metacurso.model.vo.MaterialComboDTO;
 import com.metacurso.repository.CursoMaterialRepository;
 import com.metacurso.repository.CursoRepository;
 import com.metacurso.repository.CursosDisciplinaRepository;
+import com.metacurso.repository.filter.CursoFilter;
 import com.metacurso.service.CursoService;
 import com.metacurso.service.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,8 +50,13 @@ public class CursosResource {
     private CursoMaterialRepository cursoMaterialRepository;
 
     @GetMapping
-    public List<Cursos> getAll() {
-        return cursoRepository.findAll();
+    public Page<CursoDTO> getAll(Pageable pageable) {
+        return cursoRepository.cursoDTO(pageable);
+    }
+
+    @GetMapping(params = "resumo") // Se tiver o parâmetro nome, então cai aqui!
+    public Page<CursoDTO> findAllResumo(CursoFilter filter, Pageable pageable) {
+        return cursoRepository.resumir(filter, pageable);
     }
 
     @PostMapping
@@ -102,6 +110,7 @@ public class CursosResource {
 
     }
 
+    // TODO: Adicionar paginacao
     @GetMapping("/disciplinas-do-curso/{codigo}")
     public ResponseEntity<List<DisciplinaComboDTO>> findAllDisciplinasByCursoCodigo(@PathVariable("codigo") Integer codigo) {
         return cursosDisciplinaRepository.disciplinasComboDTO(codigo) != null ?
@@ -109,6 +118,7 @@ public class CursosResource {
                 ResponseEntity.notFound().build();
     }
 
+    // TODO: Adicionar paginacao
     @GetMapping("/materiais-do-curso/{codigo}")
     public ResponseEntity<List<MaterialComboDTO>> findAllMateriaisByCursoCodigo(@PathVariable("codigo") Integer codigo) {
         return cursoMaterialRepository.materiaisComboDTO(codigo) != null ?

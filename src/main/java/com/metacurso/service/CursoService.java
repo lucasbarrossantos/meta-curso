@@ -47,6 +47,20 @@ public class CursoService {
         return cursoRepository.save(cursoSalva.get());
     }
 
+    public void deleteDisciplina(Integer cursoId, Integer disciplinaId) {
+        validarDisciplina(disciplinaId);
+        cursosDisciplinaRepository.delete(cursosDisciplinaRepository
+                .findByCursoCodigoAndDisciplinaCodigo(cursoId, disciplinaId));
+    }
+
+    public void deleteMaterial(Integer cursoId, Integer materialId) {
+        validarMaterial(materialId);
+        Materiais materiais = materialRepository.findById(materialId).get();
+        atualizarTotalMaterial(cursoId, materiais.getValor(), true);
+        cursoMaterialRepository.delete(cursoMaterialRepository
+                .findByCursoCodigoAndMaterialCodigo(cursoId, materialId));
+    }
+
     public void adicionarDisciplina(Integer cursoId, Integer disciplinaId) {
         validarDisciplina(disciplinaId);
         verificarDuplicidadeDeDisciplina(cursoId, disciplinaId);
@@ -81,12 +95,6 @@ public class CursoService {
                 cursoRepository.save(curso.get());
             }
         }
-    }
-
-    public void deleteDisciplina(Integer cursoId, Integer disciplinaId) {
-        validarDisciplina(disciplinaId);
-        cursosDisciplinaRepository.delete(cursosDisciplinaRepository
-                .findByCursoCodigoAndDisciplinaCodigo(cursoId, disciplinaId));
     }
 
     private void verificarDuplicidadeDeDisciplina(Integer cursoId, Integer disciplinaId) {
@@ -138,11 +146,4 @@ public class CursoService {
         }
     }
 
-    public void deleteMaterial(Integer cursoId, Integer materialId) {
-        validarMaterial(materialId);
-        Materiais materiais = materialRepository.findById(materialId).get();
-        atualizarTotalMaterial(cursoId, materiais.getValor(), true);
-        cursoMaterialRepository.delete(cursoMaterialRepository
-                .findByCursoCodigoAndMaterialCodigo(cursoId, materialId));
-    }
 }
