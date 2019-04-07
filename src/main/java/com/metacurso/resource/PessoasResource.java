@@ -6,6 +6,8 @@ import com.metacurso.repository.PessoaRepository;
 import com.metacurso.service.PessoaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +30,8 @@ public class PessoasResource {
     private ApplicationEventPublisher publisher;
 
     @GetMapping
-    public List<Pessoas> getAll() {
-        return pessoaRepository.findAll();
+    public Page<Pessoas> getAll(Pageable pageable) {
+        return pessoaRepository.findAll(pageable);
     }
 
     @PostMapping
@@ -57,5 +59,11 @@ public class PessoasResource {
         return pessoaRepository.findById(codigo).isPresent() ?
                 ResponseEntity.ok().body(pessoaRepository.findById(codigo).get()) :
                 ResponseEntity.notFound().build();
+    }
+
+    @GetMapping(params = "nome") // Se tiver o parâmetro nome, então cai aqui!
+    public Page<Pessoas> findAllByNome(@RequestParam(required = false, defaultValue = "%") String nome,
+                                       Pageable pageable) {
+        return pessoaRepository.findAllByNomeContainingIgnoreCase(nome, pageable);
     }
 }
