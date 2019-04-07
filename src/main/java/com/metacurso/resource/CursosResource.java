@@ -123,6 +123,13 @@ public class CursosResource {
         cursoService.deleteDisciplina(cursoId, disciplinaId);
     }
 
+    @DeleteMapping("/{cursoId}/remover-material/{materialId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMaterial(@PathVariable("cursoId") Integer cursoId,
+                                 @PathVariable("materialId") Integer materialId) {
+        cursoService.deleteMaterial(cursoId, materialId);
+    }
+
     /**
      * Exceptions Handler
      */

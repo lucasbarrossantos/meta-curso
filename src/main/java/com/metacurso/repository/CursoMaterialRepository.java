@@ -12,5 +12,7 @@ public interface CursoMaterialRepository extends JpaRepository<CursosMateriais, 
     @Query("select cm.material.codigo as codigo, cm.material.nome as nome from CursosMateriais as cm where cm.curso.codigo = ?1")
     List<MaterialComboDTO> materiaisComboDTO(Integer cursoID);
 
-    List<CursosMateriais> findByCursoCodigoAndMaterialCodigo(Integer cursoId, Integer materialId);
+    List<CursosMateriais> findAllByCursoCodigoAndMaterialCodigo(Integer cursoId, Integer materialId);
+
+    CursosMateriais findByCursoCodigoAndMaterialCodigo(Integer cursoId, Integer materialId);
 }

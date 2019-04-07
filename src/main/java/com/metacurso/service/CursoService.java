@@ -3,6 +3,7 @@ package com.metacurso.service;
 import com.metacurso.model.Cursos;
 import com.metacurso.model.CursosDisciplinas;
 import com.metacurso.model.CursosMateriais;
+import com.metacurso.model.Materiais;
 import com.metacurso.repository.*;
 import com.metacurso.service.exception.*;
 import org.springframework.beans.BeanUtils;
@@ -61,7 +62,25 @@ public class CursoService {
         CursosMateriais cursosMateriais = new CursosMateriais();
         cursosMateriais.setCurso(cursoRepository.findById(cursoId).get());
         cursosMateriais.setMaterial(materialRepository.findById(materialId).get());
-        cursoMaterialRepository.save(cursosMateriais);
+        cursosMateriais = cursoMaterialRepository.save(cursosMateriais);
+        atualizarTotalMaterial(cursoId, cursosMateriais.getMaterial().getValor(), false);
+    }
+
+    private void atualizarTotalMaterial(Integer cursoId, Double valor, Boolean removendo) {
+        Optional<Cursos> curso = cursoRepository.findById(cursoId);
+        if (curso.isPresent()) {
+            if (curso.get().getTotal_material() == null) {
+                curso.get().setTotal_material(0.0);
+            }
+
+            if (!removendo) {
+                curso.get().setTotal_material(curso.get().getTotal_material() + valor);
+                cursoRepository.save(curso.get());
+            } else {
+                curso.get().setTotal_material(curso.get().getTotal_material() - valor);
+                cursoRepository.save(curso.get());
+            }
+        }
     }
 
     public void deleteDisciplina(Integer cursoId, Integer disciplinaId) {
@@ -81,7 +100,7 @@ public class CursoService {
 
     private void verificarDuplicidadeDeMaterial(Integer cursoId, Integer materialId) {
         List<CursosMateriais> materiais = cursoMaterialRepository
-                .findByCursoCodigoAndMaterialCodigo(cursoId, materialId);
+                .findAllByCursoCodigoAndMaterialCodigo(cursoId, materialId);
 
         if (!materiais.isEmpty()) {
             throw new MaterialJaAdicionadaException();
@@ -119,4 +138,11 @@ public class CursoService {
         }
     }
 
+    public void deleteMaterial(Integer cursoId, Integer materialId) {
+        validarMaterial(materialId);
+        Materiais materiais = materialRepository.findById(materialId).get();
+        atualizarTotalMaterial(cursoId, materiais.getValor(), true);
+        cursoMaterialRepository.delete(cursoMaterialRepository
+                .findByCursoCodigoAndMaterialCodigo(cursoId, materialId));
+    }
 }
