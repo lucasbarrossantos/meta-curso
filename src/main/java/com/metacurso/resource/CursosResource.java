@@ -18,6 +18,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +29,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.springframework.beans.support.PagedListHolder.DEFAULT_PAGE_SIZE;
 
 @RestController
 @RequestMapping("/cursos")
@@ -88,8 +93,8 @@ public class CursosResource {
 
     @PostMapping("/{cursoId}/adicionar-disciplina/{disciplinaId}")
     public ResponseEntity<List<DisciplinaComboDTO>>
-        adicionarDisciplina(@PathVariable("disciplinaId") Integer disciplinaId,
-                            @PathVariable("cursoId") Integer cursoId) {
+    adicionarDisciplina(@PathVariable("disciplinaId") Integer disciplinaId,
+                        @PathVariable("cursoId") Integer cursoId) {
 
         cursoService.adicionarDisciplina(cursoId, disciplinaId);
         return cursosDisciplinaRepository.disciplinasComboDTO(cursoId).isEmpty() ?
@@ -101,7 +106,7 @@ public class CursosResource {
     @PostMapping("/{cursoId}/adicionar-material/{materialId}")
     public ResponseEntity<List<MaterialComboDTO>>
     adicionarMaterial(@PathVariable("materialId") Integer materialId,
-                        @PathVariable("cursoId") Integer cursoId) {
+                      @PathVariable("cursoId") Integer cursoId) {
 
         cursoService.adicionarMaterial(cursoId, materialId);
         return cursoMaterialRepository.materiaisComboDTO(cursoId).isEmpty() ?
@@ -136,7 +141,7 @@ public class CursosResource {
     @DeleteMapping("/{cursoId}/remover-material/{materialId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMaterial(@PathVariable("cursoId") Integer cursoId,
-                                 @PathVariable("materialId") Integer materialId) {
+                               @PathVariable("materialId") Integer materialId) {
         cursoService.deleteMaterial(cursoId, materialId);
     }
 
@@ -178,7 +183,7 @@ public class CursosResource {
     }
 
     @ExceptionHandler({MaterialJaAdicionadaException.class})
-    public ResponseEntity<Object> handleMaterialJaAdicionadaException (
+    public ResponseEntity<Object> handleMaterialJaAdicionadaException(
             MaterialJaAdicionadaException ex) {
 
         String mensagemUsuario = messageSource.getMessage("curso.material-ja-adicionado",

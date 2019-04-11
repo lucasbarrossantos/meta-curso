@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -37,7 +38,7 @@ public class PessoasResource {
     @PostMapping
     public ResponseEntity<Pessoas> save(@Valid @RequestBody Pessoas pessoas,
                                           HttpServletResponse response) {
-        Pessoas pessoaSalvo = pessoaRepository.save(pessoas);
+        Pessoas pessoaSalvo = pessoaService.save(pessoas);
         publisher.publishEvent(new RecursoCriadoEvent(this, response, pessoaSalvo.getCodigo()));
         return ResponseEntity.status(HttpStatus.CREATED).body(pessoaSalvo);
     }

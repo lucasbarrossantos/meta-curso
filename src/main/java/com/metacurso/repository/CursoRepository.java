@@ -30,7 +30,7 @@ public interface CursoRepository extends JpaRepository<Cursos, Integer>, CursoRe
             "c.total_material, " +
             "c.valorCurso, " +
             "c.status) " +
-            "from Cursos as c ")
+            "from Cursos as c order by c.nome desc ")
     Page<CursoDTO> cursoDTO(Pageable pageable);
 
 }

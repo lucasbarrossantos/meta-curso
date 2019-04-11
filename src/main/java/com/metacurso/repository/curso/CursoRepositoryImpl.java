@@ -6,6 +6,7 @@ import com.metacurso.repository.filter.CursoFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
@@ -27,7 +28,7 @@ public class CursoRepositoryImpl implements CursoRepositoryQuery {
     public Page<CursoDTO> resumir(CursoFilter filter, Pageable pageable) {
         CriteriaBuilder builder = manager.getCriteriaBuilder();
         CriteriaQuery<CursoDTO> criteria = builder.createQuery(CursoDTO.class);
-        Root<Cursos> root = criteria.from(Cursos.class); // Faz a consulta daqui
+        Root<Cursos> root = criteria.from(Cursos.class);
 
         criteria.select(builder.construct(CursoDTO.class,
                 root.get("codigo"), root.get("nome"),
@@ -38,6 +39,15 @@ public class CursoRepositoryImpl implements CursoRepositoryQuery {
         ));
 
         Predicate[] predicates = criarRestrincoes(filter, builder, root);
+
+        Sort sort = pageable.getSort();
+        if (sort != null) {
+            Sort.Order order = sort.iterator().next();
+            String property = order.getProperty();
+            criteria.orderBy(order.isAscending() ? builder.asc(root.get(property))
+                    : builder.desc(root.get(property)));
+        }
+
         criteria.where(predicates);
         TypedQuery<CursoDTO> query = manager.createQuery(criteria);
         adicionarRestrincoesDePaginacao(query, pageable);

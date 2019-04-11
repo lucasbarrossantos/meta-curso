@@ -6,6 +6,8 @@ import com.metacurso.repository.MaterialRepository;
 import com.metacurso.service.MaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +30,8 @@ public class MateriaisResource {
     private ApplicationEventPublisher publisher;
 
     @GetMapping
-    public List<Materiais> getAll() {
-        return materialRepository.findAll();
+    public Page<Materiais> getAll(Pageable pageable) {
+        return materialRepository.findAll(pageable);
     }
 
     @PostMapping
@@ -57,5 +59,11 @@ public class MateriaisResource {
         return materialRepository.findById(codigo).isPresent() ?
                 ResponseEntity.ok().body(materialRepository.findById(codigo).get()) :
                 ResponseEntity.notFound().build();
+    }
+
+    @GetMapping(params = "nome") // Se tiver o parâmetro nome, então cai aqui!
+    public Page<Materiais> findAllByNome(@RequestParam(required = false, defaultValue = "%") String nome,
+                                         Pageable pageable) {
+        return materialRepository.findAllByNomeContainingIgnoreCase(nome, pageable);
     }
 }

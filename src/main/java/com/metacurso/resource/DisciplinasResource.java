@@ -6,6 +6,8 @@ import com.metacurso.repository.DisciplinaRepository;
 import com.metacurso.service.DisciplinaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +30,8 @@ public class DisciplinasResource {
     private ApplicationEventPublisher publisher;
 
     @GetMapping
-    public List<Disciplinas> getAll() {
-        return disciplinaRepository.findAll();
+    public Page<Disciplinas> getAll(Pageable pageable) {
+        return disciplinaRepository.findAll(pageable);
     }
 
     @PostMapping
@@ -57,6 +59,12 @@ public class DisciplinasResource {
         return disciplinaRepository.findById(codigo).isPresent() ?
                 ResponseEntity.ok().body(disciplinaRepository.findById(codigo).get()) :
                 ResponseEntity.notFound().build();
+    }
+
+    @GetMapping(params = "nome") // Se tiver o parâmetro nome, então cai aqui!
+    public Page<Disciplinas> findAllByNome(@RequestParam(required = false, defaultValue = "%") String nome,
+                                          Pageable pageable) {
+        return disciplinaRepository.findAllByNomeContainingIgnoreCase(nome, pageable);
     }
     
 }

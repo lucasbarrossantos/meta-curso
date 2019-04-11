@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -31,5 +32,12 @@ public class PessoaService {
 
         return pessoaSalva;
     }
-    
+
+    public Pessoas save(Pessoas pessoas) {
+        if (pessoas.getData_cadastro() == null) {
+            pessoas.setData_cadastro(new Date());
+        }
+
+        return pessoaRepository.save(pessoas);
+    }
 }
