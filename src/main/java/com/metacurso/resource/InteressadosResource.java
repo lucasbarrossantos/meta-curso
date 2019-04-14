@@ -71,7 +71,7 @@ public class InteressadosResource {
     // ExceptionHandlers
 
     @ExceptionHandler({CursoInexistenteException.class })
-    public ResponseEntity<Object> handleCursoInexistente(
+    public ResponseEntity<Object> handleCursoInexistenteException (
             CursoInexistenteException ex) {
 
         String mensagemUsuario = messageSource.getMessage("curso.inexistente",
@@ -83,7 +83,7 @@ public class InteressadosResource {
     }
 
     @ExceptionHandler({ EventoInexistenteException.class })
-    public ResponseEntity<Object> handleEventoInexistente(
+    public ResponseEntity<Object> handleEventoInexistenteException (
             EventoInexistenteException ex) {
 
         String mensagemUsuario = messageSource.getMessage("evento.inexistente",

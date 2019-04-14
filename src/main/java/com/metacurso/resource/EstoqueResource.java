@@ -70,7 +70,7 @@ public class EstoqueResource {
     // ExceptionHandlers
 
     @ExceptionHandler({ MaterialInexistenteException.class })
-    public ResponseEntity<Object> handleMaterialInexistente (
+    public ResponseEntity<Object> handleMaterialInexistenteException (
             MaterialInexistenteException ex) {
 
         String mensagemUsuario = messageSource.getMessage("material.inexistente",

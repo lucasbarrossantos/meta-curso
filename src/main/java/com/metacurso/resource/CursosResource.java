@@ -3,6 +3,7 @@ package com.metacurso.resource;
 import com.metacurso.event.RecursoCriadoEvent;
 import com.metacurso.exceptionhandler.MetaCursoExceptionHandler;
 import com.metacurso.model.Cursos;
+import com.metacurso.model.vo.CursoComboDTO;
 import com.metacurso.model.vo.CursoDTO;
 import com.metacurso.model.vo.DisciplinaComboDTO;
 import com.metacurso.model.vo.MaterialComboDTO;
@@ -18,9 +19,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.springframework.beans.support.PagedListHolder.DEFAULT_PAGE_SIZE;
 
 @RestController
 @RequestMapping("/cursos")
@@ -62,6 +58,11 @@ public class CursosResource {
     @GetMapping(params = "resumo") // Se tiver o parâmetro nome, então cai aqui!
     public Page<CursoDTO> findAllResumo(CursoFilter filter, Pageable pageable) {
         return cursoRepository.resumir(filter, pageable);
+    }
+
+    @GetMapping(params = "combo")
+    public List<CursoComboDTO> findAllCombo() {
+        return cursoRepository.CursosComboDTO();
     }
 
     @PostMapping
@@ -161,7 +162,7 @@ public class CursosResource {
     }
 
     @ExceptionHandler({DisciplinaInexistenteException.class})
-    public ResponseEntity<Object> handleCategoriaInexistente(
+    public ResponseEntity<Object> handleDisciplinaInexistenteException(
             DisciplinaInexistenteException ex) {
 
         String mensagemUsuario = messageSource.getMessage("curso.disciplina",
@@ -172,7 +173,7 @@ public class CursosResource {
     }
 
     @ExceptionHandler({DisciplinaJaAdicionadaException.class})
-    public ResponseEntity<Object> handleCategoriaInexistente(
+    public ResponseEntity<Object> handleDisciplinaJaAdicionadaException(
             DisciplinaJaAdicionadaException ex) {
 
         String mensagemUsuario = messageSource.getMessage("curso.disciplina-ja-adicionada",

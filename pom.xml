@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.metacurso</groupId>
-	<artifactId>meta-curso</artifactId>
+	<artifactId>meta-cursoId</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>meta-cursos</name>
