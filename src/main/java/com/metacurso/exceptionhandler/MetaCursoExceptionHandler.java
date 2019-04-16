@@ -1,5 +1,6 @@
 package com.metacurso.exceptionhandler;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -7,7 +8,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -58,6 +58,17 @@ public class MetaCursoExceptionHandler extends ResponseEntityExceptionHandler {
                                                                        WebRequest request) {
 
         String mensagemUsuario = messageSource.getMessage("recurso.nao-encontrado",null, LocaleContextHolder.getLocale());
+        String mensagemDesenvolvedor = tx.toString();
+        List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+
+        return handleExceptionInternal(tx, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler({ ConstraintViolationException.class })
+    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException tx,
+                                                                     WebRequest request) {
+
+        String mensagemUsuario = messageSource.getMessage("updateordelete",null, LocaleContextHolder.getLocale());
         String mensagemDesenvolvedor = tx.toString();
         List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 

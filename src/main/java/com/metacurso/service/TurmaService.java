@@ -9,11 +9,13 @@ import com.metacurso.repository.HorariosRepository;
 import com.metacurso.repository.TurmaRepository;
 import com.metacurso.service.exception.ChoqueDeHorarioException;
 import com.metacurso.service.exception.CursoInexistenteException;
+import com.metacurso.service.exception.HorarioDataFimMaiorQueDataInicioException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,11 +74,20 @@ public class TurmaService {
 
     public void adicionarHorario(Horarios horario) {
         horario.setDia(horario.getDataAula().getDate());
+        validarFimMenorQueInicio(horario);
         // TODO: Validar turma
-        // TODO: Validar choque de horário
         validarChoqueDeHorario(horario);
         // TODO: Validar choque de horário para o mesmo professor em turmas diferentes
         horariosRepository.save(horario);
+    }
+
+    private void validarFimMenorQueInicio(Horarios horario) {
+        LocalTime inicio = LocalTime.parse(horario.getInicio());
+        LocalTime fim = LocalTime.parse(horario.getFim());
+
+        if (fim.isBefore(inicio)) {
+            throw new HorarioDataFimMaiorQueDataInicioException();
+        }
     }
 
     private void validarChoqueDeHorario(Horarios horario) {
@@ -97,5 +108,14 @@ public class TurmaService {
 
     public void removerHorario(Integer turmaId, Integer horarioId) {
         horariosRepository.deleteById(horarioId);
+    }
+
+    public void deleteByCodigo(Integer codigo) {
+        CursosTurmas cursosTurmas = cursosTurmasRepository.findOneByTurmaCodigo(codigo);
+
+        if (cursosTurmas != null) {
+            cursosTurmasRepository.delete(cursosTurmas);
+            turmaRepository.deleteById(codigo);
+        }
     }
 }
