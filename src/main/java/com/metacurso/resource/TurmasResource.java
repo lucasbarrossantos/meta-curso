@@ -6,8 +6,10 @@ import com.metacurso.model.Horarios;
 import com.metacurso.model.Turmas;
 import com.metacurso.model.vo.HorarioDTO;
 import com.metacurso.model.vo.TurmaEditDTO;
+import com.metacurso.model.vo.TurmaGridDTO;
 import com.metacurso.repository.HorariosRepository;
 import com.metacurso.repository.TurmaRepository;
+import com.metacurso.repository.filter.TurmaFilter;
 import com.metacurso.service.TurmaService;
 import com.metacurso.service.exception.ChoqueDeHorarioException;
 import com.metacurso.service.exception.CursoInexistenteException;
@@ -50,6 +52,11 @@ public class TurmasResource {
         return turmaRepository.findAll();
     }
 
+    @GetMapping(params = "resumo")
+    public Page<TurmaGridDTO> getAllTurmasResumidas(TurmaFilter filter, Pageable pageable) {
+        return turmaRepository.resumo(filter, pageable);
+    }
+
     @PostMapping
     public ResponseEntity<Turmas> save(@Valid @RequestBody Turmas turmas,
                                              HttpServletResponse response) {
@@ -90,6 +97,13 @@ public class TurmasResource {
         turmaService.adicionarHorario(horario);
         publisher.publishEvent(new RecursoCriadoEvent(this, response, horario.getTurma().getCodigo()));
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{turmaId}/remover-horario/{horarioId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteHorario(@PathVariable("turmaId") Integer turmaId,
+                               @PathVariable("horarioId") Integer horarioId) {
+        turmaService.removerHorario(turmaId, horarioId);
     }
 
     // ExceptionHandlers

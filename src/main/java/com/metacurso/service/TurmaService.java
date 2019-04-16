@@ -94,4 +94,8 @@ public class TurmaService {
         }
 
     }
+
+    public void removerHorario(Integer turmaId, Integer horarioId) {
+        horariosRepository.deleteById(horarioId);
+    }
 }

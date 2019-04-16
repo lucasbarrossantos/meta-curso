@@ -57,7 +57,7 @@ public class CursosResource {
 
     @GetMapping(params = "resumo") // Se tiver o parâmetro nome, então cai aqui!
     public Page<CursoDTO> findAllResumo(CursoFilter filter, Pageable pageable) {
-        return cursoRepository.resumir(filter, pageable);
+        return cursoRepository.resumo(filter, pageable);
     }
 
     @GetMapping(params = "combo")

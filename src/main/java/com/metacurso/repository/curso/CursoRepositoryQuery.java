@@ -7,6 +7,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface CursoRepositoryQuery {
 
-    Page<CursoDTO> resumir(CursoFilter filter, Pageable pageable);
+    Page<CursoDTO> resumo(CursoFilter filter, Pageable pageable);
 
 }

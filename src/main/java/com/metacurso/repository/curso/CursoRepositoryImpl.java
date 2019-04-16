@@ -25,7 +25,7 @@ public class CursoRepositoryImpl implements CursoRepositoryQuery {
     private EntityManager manager;
 
     @Override
-    public Page<CursoDTO> resumir(CursoFilter filter, Pageable pageable) {
+    public Page<CursoDTO> resumo(CursoFilter filter, Pageable pageable) {
         CriteriaBuilder builder = manager.getCriteriaBuilder();
         CriteriaQuery<CursoDTO> criteria = builder.createQuery(CursoDTO.class);
         Root<Cursos> root = criteria.from(Cursos.class);
